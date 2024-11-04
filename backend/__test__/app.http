@@ -1,0 +1,389 @@
+@baseUrl = http://localhost:3001
+@contentType = application/json
+@randomEmail = {{$datetime iso8601}}_{{$randomInt 1000 9999}}@example.com
+
+### 開発者向けエンドポイント
+
+### データベースをリセット
+POST {{baseUrl}}/develop/reset_db
+Content-Type: {{contentType}}
+
+### デモユーザーでログイン
+POST {{baseUrl}}/develop/demo_user_login
+Content-Type: {{contentType}}
+
+### 認証関連エンドポイント
+
+### ユーザー登録
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "name": "Alice",
+  "email": "{{randomEmail}}",
+  "password": "password"
+}
+
+### ユーザーログイン
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "alice@example.com",
+  "password": "password"
+}
+
+### ユーザーログアウト
+POST {{baseUrl}}/auth/logout
+Content-Type: {{contentType}}
+
+### me
+GET {{baseUrl}}/auth/me
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+### 管理者ログイン
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "password"
+}
+
+
+### ユーザー管理エンドポイント
+
+### ユーザーを作成
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "name": "John Doe",
+  "email": "{{randomEmail}}",
+  "password": "password"
+}
+
+### ユーザー一覧を取得
+GET {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+### ログインユーザーと全ユーザーを取得
+GET {{baseUrl}}/users/with-follow-status
+Content-Type: {{contentType}}
+
+### ユーザー詳細を取得
+GET {{baseUrl}}/users/2
+Content-Type: {{contentType}}
+
+### ユーザー情報を変更
+PUT {{baseUrl}}/users/4
+Content-Type: {{contentType}}
+
+{
+  "name": "John Doe",
+  "email": "{{randomEmail}}"
+}
+
+
+# ユーザー権限
+
+### 利用可能な全ての権限を取得
+GET {{baseUrl}}/users/available-roles
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+### ユーザーの現在の権限を取得
+GET {{baseUrl}}/users/2/roles
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+### ユーザーに権限を追加
+PUT {{baseUrl}}/users/2/roles
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+{
+  "roles": ["admin", "read_only_admin"],
+  "action": "add"
+}
+
+### ユーザーから権限を削除
+PUT {{baseUrl}}/users/2/roles
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+{
+  "roles": ["admin"],
+  "action": "remove"
+}
+
+### ユーザーavatar情報を変更
+PUT {{baseUrl}}/users/2/avatar
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="avatar"; filename="example.jpg"
+Content-Type: image/jpeg
+
+< ./backend/uploads/test.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+
+### フォロー関連エンドポイント
+
+### ログインユーザーと全ユーザーを取得
+GET {{baseUrl}}/users/with-follow-status
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_AUTH_TOKEN_HERE
+
+### ユーザーをフォローする
+POST {{baseUrl}}/users/4/follow
+Content-Type: {{contentType}}
+
+### ユーザーのフォローを解除する
+DELETE {{baseUrl}}/users/4/follow
+Content-Type: {{contentType}}
+
+### フォロワーリストを表示
+GET {{baseUrl}}/users/5/followers
+Content-Type: {{contentType}}
+
+### フォローしているユーザーリストを表示
+GET {{baseUrl}}/users/5/following
+Content-Type: {{contentType}}
+
+### マイクロポスト関連エンドポイント
+
+### マイクロポストを投稿
+POST {{baseUrl}}/microposts
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="title"
+
+My First Post
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="categoryIds"
+
+[1,2,3]
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="./backend/uploads/test.png"
+Content-Type: image/jpeg
+
+< ./backend/uploads/test.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### マイクロポスト一覧を取得
+GET {{baseUrl}}/microposts
+Content-Type: {{contentType}}
+
+### マイクロポスト一覧を取得（検索機能）
+GET {{baseUrl}}/microposts?search=abc
+Content-Type: {{contentType}}
+
+### マイクロポスト一覧を取得（ソート機能）いいねの多い順に表示
+GET {{baseUrl}}/microposts?sortBy=likes
+Content-Type: {{contentType}}
+
+### マイクロポスト一覧を取得（ソート機能）mostViewの多い順に表示
+GET {{baseUrl}}/microposts?sortBy=mostView
+Content-Type: {{contentType}}
+
+### マイクロポスト詳細を取得
+GET {{baseUrl}}/microposts/28
+Content-Type: {{contentType}}
+
+### マイクロポスト詳細を取得（特定のユーザーのマイクロポスト）
+GET {{baseUrl}}/microposts/user/2
+Content-Type: {{contentType}}
+
+### マイクロポスト閲覧記録を追加
+POST {{baseUrl}}/micropost-views/5
+Content-Type: {{contentType}}
+
+### カテゴリー関連エンドポイント
+
+### カテゴリー作成
+POST {{baseUrl}}/categories
+Content-Type: {{contentType}}
+
+{
+  "name": "New Category"
+}
+
+### カテゴリー一覧を取得
+GET {{baseUrl}}/categories
+Content-Type: {{contentType}}
+
+### カテゴリー詳細を取得
+GET {{baseUrl}}/categories/1
+Content-Type: {{contentType}}
+
+
+
+### チーム関連エンドポイント
+
+### チームを作成
+POST {{baseUrl}}/teams
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+{
+  "name": "New Team",
+  "isPrivate": false
+}
+
+### チーム一覧を取得
+GET {{baseUrl}}/teams
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+### チーム詳細を取得
+GET {{baseUrl}}/teams/1
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+### チーム情報を更新
+PUT {{baseUrl}}/teams/1
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+{
+  "name": "Updated Team Name",
+  "isPrivate": true
+}
+
+### チームのプライバシー設定を更新
+PUT {{baseUrl}}/teams/1/privacy
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+{
+  "isPrivate": true
+}
+
+### チームにメンバーを追加
+POST {{baseUrl}}/teams/1/members
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+{
+  "userId": 3
+}
+
+### チームからメンバーを削除
+DELETE {{baseUrl}}/teams/1/members/2
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+### チームを削除
+DELETE {{baseUrl}}/teams/1
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+
+### テストエンドポイント
+
+### 公開テスト
+GET {{baseUrl}}/test/public
+Content-Type: {{contentType}}
+
+### 保護されたテスト
+GET {{baseUrl}}/test/protected
+Content-Type: {{contentType}}
+
+### プロフィールテスト（認証なし）
+GET {{baseUrl}}/test/profile
+Content-Type: {{contentType}}
+
+### プロフィールテスト（Bearerトークン付き）
+GET {{baseUrl}}/test/profile
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+### 管理者テスト
+GET {{baseUrl}}/test/admin
+Content-Type: {{contentType}}
+
+### Like関連エンドポイント
+
+### マイクロポストにいいねを追加
+POST {{baseUrl}}/microposts/72/likes
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+### マイクロポストのいいねを削除
+DELETE {{baseUrl}}/microposts/72/likes
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+### Comment関連エンドポイント
+
+### マイクロポストにコメントを追加
+POST {{baseUrl}}/microposts/1/comments
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+{
+  "content": "This is a great post!"
+}
+
+### マイクロポストのコメント一覧を取得
+GET {{baseUrl}}/microposts/1/comments
+Content-Type: {{contentType}}
+
+### コメントを更新
+PUT {{baseUrl}}/microposts/1/comments/1
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+{
+  "content": "Updated comment content"
+}
+
+### コメントを削除
+DELETE {{baseUrl}}/microposts/1/comments/1
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+### マイクロポストを投稿
+POST {{baseUrl}}/microposts
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="title"
+
+My First Post
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="example.jpg"
+Content-Type: image/jpeg
+
+< ./backend/uploads/test.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+
+# Admin エンドポイント
+
+### マイクロポストのランキングを取得
+GET {{baseUrl}}/admin/ranking
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+### MostViewのランキングを取得
+GET {{baseUrl}}/admin/ranking/most-view
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+### カテゴリランキングを取得
+GET {{baseUrl}}/admin/ranking/category
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+### ユーザー一覧をCSVでダウンロード
+GET {{baseUrl}}/users/export-csv
+Content-Type: {{contentType}}
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+

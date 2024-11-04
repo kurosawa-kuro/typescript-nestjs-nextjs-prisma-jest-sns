@@ -1,0 +1,28 @@
+{
+    "favorites.resources": [
+        {
+            "filePath": "test\\app.http",
+            "group": "Default"
+        },
+        {
+            "filePath": "__test__\\app.http",
+            "group": "Default"
+        },
+        {
+            "filePath": "backend\\__test__\\app.http",
+            "group": "Default"
+        },
+        {
+            "filePath": "README.md",
+            "group": "Default"
+        },
+        {
+            "filePath": "backend\\prisma\\schema.prisma",
+            "group": "Default"
+        },
+        {
+            "filePath": "memo.md",
+            "group": "Default"
+        }
+    ]
+}

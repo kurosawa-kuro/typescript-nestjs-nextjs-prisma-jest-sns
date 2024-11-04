@@ -1,0 +1,27 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": "../../",
+  "testEnvironment": "node",
+  "testRegex": "__test__/unit/.*\\.spec\\.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "^@/(.*)$": "<rootDir>/src/$1",
+    "^@prisma-client$": "<rootDir>/node_modules/.prisma/client/index"
+  },
+  "coveragePathIgnorePatterns": [
+    "node_modules",
+    ".module.ts",
+    "main.ts",
+    ".entity.ts",
+    ".dto.ts",
+    ".config.ts",
+    "prisma.service.ts",
+    ".decorator.ts"
+  ],
+  "collectCoverageFrom": [
+    "src/**/*.(t|j)s"
+  ],
+  "coverageDirectory": "./coverage"
+}
